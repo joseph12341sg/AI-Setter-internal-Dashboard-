@@ -71,15 +71,23 @@ export default function DashboardOverview() {
   useEffect(() => { loadData(); }, [loadData]);
 
   async function toggleKillSwitch() {
+    const password = prompt('Enter kill switch password:');
+    if (!password) return;
+
     setToggling(true);
     const newState = !killSwitch;
     try {
-      await fetch('/api/settings/kill-switch', {
+      const res = await fetch('/api/settings/kill-switch', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ enabled: newState }),
+        body: JSON.stringify({ enabled: newState, password }),
       });
-      setKillSwitch(newState);
+      if (!res.ok) {
+        const err = await res.json();
+        alert(err.error || 'Failed to toggle kill switch');
+      } else {
+        setKillSwitch(newState);
+      }
     } catch (err) {
       console.error('Failed to toggle kill switch:', err);
     }

@@ -26,7 +26,11 @@ export async function POST(request: NextRequest) {
 
   if (!workspace) return NextResponse.json({ error: 'No workspace' }, { status: 404 });
 
-  const { enabled } = await request.json();
+  const { enabled, password } = await request.json();
+
+  if (password !== '287652') {
+    return NextResponse.json({ error: 'Incorrect password' }, { status: 403 });
+  }
 
   await supabase
     .from('dialler_settings')
