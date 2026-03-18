@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { safeFetch, DEMO_WORKSPACE, DEMO_DIALLER } from '@/lib/demo-data';
 
 interface WorkspaceData {
   name: string;
@@ -26,12 +27,12 @@ export default function AgentsPage() {
   const [saved, setSaved] = useState(false);
 
   const loadData = useCallback(async () => {
-    const [wsRes, diallerRes] = await Promise.all([
-      fetch('/api/settings/workspace'),
-      fetch('/api/settings/dialler'),
+    const [ws, dl] = await Promise.all([
+      safeFetch('/api/settings/workspace', DEMO_WORKSPACE),
+      safeFetch('/api/settings/dialler', DEMO_DIALLER),
     ]);
-    setWorkspace(await wsRes.json());
-    setDialler(await diallerRes.json());
+    setWorkspace(ws);
+    setDialler(dl);
   }, []);
 
   useEffect(() => { loadData(); }, [loadData]);

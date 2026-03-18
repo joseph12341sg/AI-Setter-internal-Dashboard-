@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { safeFetch, DEMO_WORKSPACE } from '@/lib/demo-data';
 
 interface IntegrationStatus {
   connected: boolean;
@@ -23,8 +24,7 @@ export default function IntegrationsPage() {
   const [saved, setSaved] = useState(false);
 
   const loadData = useCallback(async () => {
-    const res = await fetch('/api/settings/workspace');
-    const data = await res.json();
+    const data = await safeFetch('/api/settings/workspace', DEMO_WORKSPACE);
     setWorkspace(data);
   }, []);
 

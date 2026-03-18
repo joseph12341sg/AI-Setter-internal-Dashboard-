@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { Card } from '@/components/ui/card';
+import { safeFetch, DEMO_WORKSPACE, DEMO_DIALLER, DEMO_CALLS } from '@/lib/demo-data';
 
 interface DashboardData {
   workspace: {
@@ -37,22 +38,18 @@ export default function DashboardOverview() {
 
   const loadData = useCallback(async () => {
     try {
-      const [wsRes, diallerRes, callsRes] = await Promise.all([
-        fetch('/api/settings/workspace'),
-        fetch('/api/settings/dialler'),
-        fetch('/api/calls?limit=10'),
+      const [workspace, settings, callsData] = await Promise.all([
+        safeFetch('/api/settings/workspace', DEMO_WORKSPACE),
+        safeFetch('/api/settings/dialler', DEMO_DIALLER),
+        safeFetch('/api/calls?limit=10', { data: DEMO_CALLS }),
       ]);
-
-      const workspace = await wsRes.json();
-      const settings = await diallerRes.json();
-      const callsData = await callsRes.json();
 
       const recentCalls = callsData.data || [];
       const today = new Date().toISOString().split('T')[0];
       const todayCalls = recentCalls.filter((c: { created_at: string }) => c.created_at?.startsWith(today));
       const booked = todayCalls.filter((c: { outcome: string }) => c.outcome === 'booked').length;
       const answered = todayCalls.filter((c: { outcome: string }) => c.outcome && c.outcome !== 'no_answer').length;
-      const durations = todayCalls.filter((c: { duration_seconds: number | null }) => c.duration_seconds).map((c: { duration_seconds: number }) => c.duration_seconds);
+      const durations = todayCalls.filter((c: { duration_seconds: number | null }) => c.duration_seconds != null).map((c: { duration_seconds: number | null }) => c.duration_seconds as number);
 
       setData({
         workspace,

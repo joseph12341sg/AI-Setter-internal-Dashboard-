@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { safeFetch, DEMO_CALLS } from '@/lib/demo-data';
 
 interface CallLog {
   id: string;
@@ -42,8 +43,7 @@ export default function CallsPage() {
     if (dateFrom) params.set('date_from', dateFrom);
     if (dateTo) params.set('date_to', dateTo);
 
-    const res = await fetch(`/api/calls?${params}`);
-    const data = await res.json();
+    const data = await safeFetch(`/api/calls?${params}`, { data: DEMO_CALLS, total: DEMO_CALLS.length });
     setCalls(data.data || []);
     setTotal(data.total || 0);
     setLoading(false);

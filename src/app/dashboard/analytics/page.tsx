@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { Card } from '@/components/ui/card';
+import { safeFetch, DEMO_ANALYTICS } from '@/lib/demo-data';
 
 interface AnalyticsData {
   totalCalls: number;
@@ -28,8 +29,8 @@ export default function AnalyticsPage() {
 
   const loadData = useCallback(async () => {
     const params = new URLSearchParams({ date_from: dateFrom, date_to: dateTo });
-    const res = await fetch(`/api/analytics?${params}`);
-    setData(await res.json());
+    const result = await safeFetch(`/api/analytics?${params}`, DEMO_ANALYTICS);
+    setData(result);
   }, [dateFrom, dateTo]);
 
   useEffect(() => { loadData(); }, [loadData]);

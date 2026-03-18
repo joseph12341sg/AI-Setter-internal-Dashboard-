@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { safeFetch, DEMO_DIALLER, DEMO_WORKSPACE } from '@/lib/demo-data';
 import type { CallWindow } from '@/types/database';
 
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -30,12 +31,10 @@ export default function SchedulePage() {
   const [timezone, setTimezone] = useState('Europe/London');
 
   const loadData = useCallback(async () => {
-    const [diallerRes, wsRes] = await Promise.all([
-      fetch('/api/settings/dialler'),
-      fetch('/api/settings/workspace'),
+    const [dialler, ws] = await Promise.all([
+      safeFetch('/api/settings/dialler', DEMO_DIALLER),
+      safeFetch('/api/settings/workspace', DEMO_WORKSPACE),
     ]);
-    const dialler = await diallerRes.json();
-    const ws = await wsRes.json();
     setData(dialler);
     setTimezone(ws.timezone || 'Europe/London');
   }, []);

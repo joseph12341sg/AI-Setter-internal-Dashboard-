@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { safeFetch, DEMO_DIALLER } from '@/lib/demo-data';
 
 interface DncEntry {
   id: string;
@@ -30,10 +31,8 @@ export default function BehaviourPage() {
   const [saved, setSaved] = useState(false);
 
   const loadData = useCallback(async () => {
-    const diallerRes = await fetch('/api/settings/dialler');
-    setDialler(await diallerRes.json());
-    // DNC list would be fetched from a dedicated endpoint
-    // For now, we'll load from the dialler settings page
+    const dl = await safeFetch('/api/settings/dialler', DEMO_DIALLER);
+    setDialler(dl);
   }, []);
 
   useEffect(() => { loadData(); }, [loadData]);

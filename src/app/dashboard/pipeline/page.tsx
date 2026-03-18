@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { safeFetch, DEMO_PIPELINE_RULES } from '@/lib/demo-data';
 import type { PipelineRule } from '@/types/database';
 
 export default function PipelinePage() {
@@ -14,8 +15,7 @@ export default function PipelinePage() {
   const [newStage, setNewStage] = useState({ name: '', id: '' });
 
   const loadRules = useCallback(async () => {
-    const res = await fetch('/api/settings/pipeline');
-    const data = await res.json();
+    const data = await safeFetch('/api/settings/pipeline', DEMO_PIPELINE_RULES);
     setRules(data);
     setLoading(false);
   }, []);
