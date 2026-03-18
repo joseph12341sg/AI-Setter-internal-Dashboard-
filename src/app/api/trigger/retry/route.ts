@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyQStashWebhook } from '@/lib/webhook-verify';
-import { isWorkspaceOperational, getWorkspaceById, getDiallerSettings } from '@/lib/workspace';
+import { isWorkspaceOperational, getWorkspaceById } from '@/lib/workspace';
 import { isOnDncList } from '@/lib/dnc';
 import { isWithinCallingHours } from '@/lib/calling-hours';
 import { createCall } from '@/lib/retell';
@@ -72,8 +72,6 @@ export async function POST(request: NextRequest) {
       console.error(`Agent 2 not configured for workspace ${workspaceId}`);
       continue;
     }
-
-    const settings = await getDiallerSettings(workspaceId);
 
     for (const entry of entries) {
       // 6. Re-check DNC

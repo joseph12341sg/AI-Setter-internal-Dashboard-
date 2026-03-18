@@ -34,8 +34,6 @@ export async function POST(request: NextRequest) {
   const transcriptUrl = payload.transcript_url as string | undefined;
   const metadata = payload.metadata as Record<string, string> | undefined;
   const callAnalysis = payload.call_analysis as Record<string, unknown> | undefined;
-  const retellDynamicVars = payload.retell_llm_dynamic_variables as Record<string, string> | undefined;
-
   if (!callId) {
     return NextResponse.json({ error: 'Missing call_id' }, { status: 400 });
   }

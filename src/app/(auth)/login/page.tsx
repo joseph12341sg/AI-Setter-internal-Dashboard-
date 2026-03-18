@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { createBrowserSupabaseClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -14,7 +14,8 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
 
-  const supabase = createBrowserSupabaseClient();
+  const supabaseRef = useRef(createBrowserSupabaseClient());
+  const supabase = supabaseRef.current;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

@@ -135,9 +135,6 @@ export async function getPipelineStages(
 export async function getTodaysAppointments(
   workspaceId: string
 ): Promise<CloseLead[]> {
-  const today = new Date();
-  const todayStr = today.toISOString().split('T')[0];
-
   // Search for leads in "Appointment Set" stage with activities today
   const response = await closeFetch(
     `/lead/?query=status:"Appointment Set"&_fields=id,display_name,contacts,custom`,
